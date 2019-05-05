@@ -2,7 +2,11 @@ package org.launchcode.techjobs.console;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Iterator;
+
+
 
 /**
  * Created by LaunchCode
@@ -61,7 +65,7 @@ public class TechJobs {
                 String searchTerm = in.nextLine();
 
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+                    printJobs(JobData.findByValue(searchTerm));
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -90,14 +94,14 @@ public class TechJobs {
 
             // Print available choices
             for (Integer j = 0; j < choiceKeys.length; j++) {
-                System.out.println("" + j + " - " + choices.get(choiceKeys[j]));
+                System.out.println("" + (j+1) + " - " + choices.get(choiceKeys[j]));
             }
 
             choiceIdx = in.nextInt();
             in.nextLine();
 
             // Validate user's input
-            if (choiceIdx < 0 || choiceIdx >= choiceKeys.length) {
+            if (choiceIdx < 1 || choiceIdx >= choiceKeys.length+1) {
                 System.out.println("Invalid choice. Try again.");
             } else {
                 validChoice = true;
@@ -105,12 +109,33 @@ public class TechJobs {
 
         } while(!validChoice);
 
-        return choiceKeys[choiceIdx];
+        return choiceKeys[choiceIdx-1];
     }
 
     // Print a list of jobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
+        StringBuilder jobString = new StringBuilder();
 
-        System.out.println("printJobs is not implemented yet");
+
+        if(someJobs.isEmpty()){
+            System.out.println(("Your search did not return any results. Please, try again."));
+        }else {
+
+            for (HashMap job : someJobs) {
+                jobString.append(("****\n"));
+                Iterator<Map.Entry<String, String>> iter = job.entrySet().iterator();
+                while (iter.hasNext()) {
+                    Map.Entry<String, String> entry = iter.next();
+                    jobString.append((entry.getKey()));
+                    jobString.append(":  ");
+                    jobString.append(entry.getValue());
+                    jobString.append("\n");
+                }
+                System.out.println(jobString.toString());
+                jobString.setLength(0);
+            }
+        }
+
+        //System.out.println("printJobs is not implemented yet");
     }
 }
